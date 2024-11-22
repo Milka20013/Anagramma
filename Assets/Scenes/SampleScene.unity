@@ -2344,9 +2344,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d77c083f096aff54c9f916b354821048, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dedicatedDictionaryPath: Assets/Texts
+  dedicatedDictionaryPath: Assets/Texts/Dictionaries
   resourcesSOFolderPath: Assets/Resources/SO/WordsDict/
-  wordsDictionary: {fileID: 0}
+  wordsDictionary: {fileID: 11400000, guid: 56d847fda83249b478db325108312562, type: 2}
 --- !u!1 &1503822196
 GameObject:
   m_ObjectHideFlags: 0

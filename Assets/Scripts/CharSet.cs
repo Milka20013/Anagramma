@@ -1,16 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 [System.Serializable]
 public class CharSet
 {
-    public string charSet = "aábcdeéfghiíjklmnoóöõpqrstuúüûvwxyz"; //abc
+    public string charSet = "aábcdeéfghiíjklmnoóöõpqrstuúüûvwxyz";
     public float[] weights;
     private float[] startingWeights;
     private float corrector = 1.4f;
     private float hardCorrector = 2f;
-    public CharSet(string charSet,float[] weights)
+    public CharSet(string charSet, float[] weights)
     {
         this.charSet = charSet;
         SetWeights(weights);
@@ -18,7 +16,7 @@ public class CharSet
     public char GetWeightedChar()
     {
         //to-do : balanced weight reduction
-        float num = Random.Range(0,weights.Sum());
+        float num = Random.Range(0, weights.Sum());
         int index = 0;
         for (int i = 0; i < charSet.Length; i++)
         {
@@ -34,13 +32,13 @@ public class CharSet
     }
     public void ResetWeights()
     {
-        startingWeights.CopyTo(weights,0);
+        startingWeights.CopyTo(weights, 0);
     }
     public void SetWeights(float[] weights)
     {
-       this.weights = weights;
-       startingWeights = new float[weights.Length];
-       weights.CopyTo(startingWeights,0);
+        this.weights = weights;
+        startingWeights = new float[weights.Length];
+        weights.CopyTo(startingWeights, 0);
     }
     public int GetIndex(char c)
     {

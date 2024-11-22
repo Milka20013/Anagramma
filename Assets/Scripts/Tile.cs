@@ -1,73 +1,45 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class Tile : MonoBehaviour, IPointerDownHandler
+public class Tile : MonoBehaviour, IPointerClickHandler
 {
-    [HideInInspector] public Vector3 startPosition;
-    [HideInInspector] public Vector3 startScale;
-    [HideInInspector] public float damageModifierP = 0;
-    public Text characters;
-    [SerializeField] private SpriteRenderer spr;
-    [SerializeField] private Color[] colors;
+    [SerializeField] private TextMeshProUGUI textObj;
+    public string Characters
+    {
+        get
+        {
+            return textObj.text;
+        }
+    }
+
+    private Vector3 startPosition;
+    private Vector3 startScale;
+    public void InitTile(string characters)
+    {
+        if (string.IsNullOrEmpty(characters))
+        {
+            characters = "a";
+        }
+        textObj.text = characters;
+
+    }
     void Start()
     {
         startPosition = transform.position;
         startScale = transform.localScale;
     }
-    public void OnPointerDown(PointerEventData pointerEventData)
+
+    public void OnPointerClick(PointerEventData eventData)
     {
-        if (Hints.instance.isSwapping)
-        {
-            Hints.instance.SetTileToSwap(this);
-            Hints.instance.ActivatePanel(true, characters.text);
-            return;
-        }
-        if (transform.position == startPosition)
+        Debug.Log(textObj.text);
+        /*if (transform.position == startPosition)
         {
             TextField.instance.AttachObject(this.gameObject);
         }
         else
         {
             TextField.instance.DetachObject(this.gameObject);
-        }
-    }
-    public float GetDamageMultiplier()
-    {
-        return 1 + damageModifierP/100;
-    }
-    public float GetForceMultiplier()
-    {
-        return 1 + 0.05f;
-    }
-    public void CalculateDamageModifier(int pos, int charSetLength)
-    {
-        if (pos == 1)
-        {
-            damageModifierP = -8f;
-            spr.color = colors[0];
-        }
-        else if (pos == 2)
-        {
-            damageModifierP = -5f;
-            spr.color = colors[1];
-        }
-        else if (pos < charSetLength / 3)
-        {
-            damageModifierP = 0;
-            spr.color = colors[2];
-        }
-        else if (pos < charSetLength * 2 / 3)
-        {
-            damageModifierP = 10f;
-            spr.color = colors[3];
-        }
-        else
-        {
-            damageModifierP = 20f;
-            spr.color = colors[4];
-        }
+        }*/
     }
 }

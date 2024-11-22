@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,9 +34,9 @@ public class Hints : MonoBehaviour
     {
         tileToSwap = tile;
     }
-    public void SwapTiles(Tile tile,string c)
+    public void SwapTiles(Tile tile, string c)
     {
-        if (gridManager.charSet.charSet.Contains(c) && tileToSwap != null)
+        /*if (gridManager.charSet.charSet.Contains(c) && tileToSwap != null)
         {
             gridManager.FillGap(tile, c);
             inputField.text = "";
@@ -49,7 +47,7 @@ public class Hints : MonoBehaviour
         {
             Debug.Log("Not valid character");
             isSwapping = false;
-        }
+        }*/
     }
     public void ReadChar()
     {

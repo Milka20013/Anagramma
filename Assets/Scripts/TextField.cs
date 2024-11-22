@@ -1,8 +1,5 @@
-using System.Collections;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using UnityEngine.UI;
 
 public class TextField : MonoBehaviour
@@ -23,7 +20,7 @@ public class TextField : MonoBehaviour
     {
         instance = this;
     }
-    public void AttachObject(GameObject obj)
+    /*public void AttachObject(GameObject obj)
     {
         attachedObjects.Add(obj);
         charList.Add(obj.GetComponent<Tile>().characters.text);
@@ -90,7 +87,7 @@ public class TextField : MonoBehaviour
     {
         //float scale = attachedObjects.ElementAt(0).GetComponent<Tile>().startScale.x;
         float scale = 1;
-        if (attachedObjects.Count*scale >= sizeThreshold)
+        if (attachedObjects.Count * scale >= sizeThreshold)
         {
             scale = sizeThreshold / attachedObjects.Count;
         }
@@ -132,38 +129,5 @@ public class TextField : MonoBehaviour
         cannon.Shoot(forceModifier, damageModifier);
         GameManager.AddUniqueWord(word);
         DestroyCharacters();
-    }
-    private void CalculateForce()
-    {
-        forceModifier =  Mathf.Sqrt(word.Length) * CalculateForceMultiplier();
-    }
-    private void CalculateDamage()
-    {
-        damageModifier = Mathf.Pow(1.1f,word.Length)*CalculateDamageMultiplier();
-    }
-    private float CalculateDamageMultiplier()
-    {
-        float number = 1;
-        foreach (var obj in attachedObjects)
-        {
-            number *= obj.GetComponent<Tile>().GetDamageMultiplier();
-        }
-        return number;
-    }
-    private float CalculateForceMultiplier()
-    {
-        float number = 1;
-        foreach (var obj in attachedObjects)
-        {
-            number *= obj.GetComponent<Tile>().GetForceMultiplier();
-        }
-        return number;
-    }
-    private void UpdateMultipliers()
-    {
-        CalculateForce();
-        CalculateDamage();
-        dmgModifierText.text = "Damage: " + Math.Round(damageModifier,2);
-        forceModifierText.text = "Force: " + Math.Round(forceModifier, 2);
-    }
+    }*/
 }

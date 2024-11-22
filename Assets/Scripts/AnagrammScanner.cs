@@ -9,7 +9,7 @@ public class AnagrammScanner : MonoBehaviour
     private void Start()
     {
         words = TextField.instance.wordSet;
-        longestWordLength = gridManager.numberOfTiles;
+        longestWordLength = gridManager.NumberOfTiles;
     }
     private void Update()
     {
@@ -31,7 +31,7 @@ public class AnagrammScanner : MonoBehaviour
     }
     public void SearchAllWords()
     {
-        string[] characters = gridManager.tileStrings.ToArray();
+        /*string[] characters = gridManager.tileStrings.ToArray();
         char[] wordChars;
         CharSet charSet = gridManager.charSet;
         int abcLength = gridManager.charSet.charSet.Length;
@@ -62,7 +62,7 @@ public class AnagrammScanner : MonoBehaviour
             }
             if (tester)
             {
-                numberOfWordsByLength[words[i].Length-1]++;
+                numberOfWordsByLength[words[i].Length - 1]++;
             }
             tester = true;
         }
@@ -72,11 +72,11 @@ public class AnagrammScanner : MonoBehaviour
             sum += numberOfWordsByLength[i];
             Debug.Log(numberOfWordsByLength[i]);
         }
-        Debug.Log(sum);
+        Debug.Log(sum);*/
     }
     public void ScanForWord(int input)
     {
-        string[] characters = gridManager.tileStrings.ToArray();
+        /*string[] characters = gridManager.tileStrings.ToArray();
         char[] wordChars;
         CharSet charSet = gridManager.charSet;
         int abcLength = gridManager.charSet.charSet.Length;
@@ -114,11 +114,11 @@ public class AnagrammScanner : MonoBehaviour
                 tester = true;
             }
         }
-        searchedWord = "NOT FOUND";
+        searchedWord = "NOT FOUND";*/
     }
     public void ScanForWord(ParametersForbuttons input)
     {
-        string[] characters = gridManager.tileStrings.ToArray();
+        /*string[] characters = gridManager.tileStrings.ToArray();
         char[] wordChars;
         CharSet charSet = gridManager.charSet;
         int abcLength = gridManager.charSet.charSet.Length;
@@ -172,6 +172,6 @@ public class AnagrammScanner : MonoBehaviour
                 tester = true;
             }
         }
-        searchedWord = "NOT FOUND";
+        searchedWord = "NOT FOUND";*/
     }
 }

@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System.IO;
 
 public class TextReader : MonoBehaviour
 {
@@ -37,10 +34,10 @@ public class TextReader : MonoBehaviour
             weightsF[i] = float.Parse(weightsS[i]);
         }
         charSet = new CharSet(charContent[index], weightsF);
-        gridManager.charSet = charSet;
+        //gridManager.charSet = charSet;
         for (int i = 0; i < textsOfWords.Length; i++)
         {
-            if (textsOfWords[i].name.Substring(0,3) == language)
+            if (textsOfWords[i].name.Substring(0, 3) == language)
             {
                 index = i;
                 break;

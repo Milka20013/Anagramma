@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 public class Tile : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private TextMeshProUGUI textObj;
+    [SerializeField] private GameEventContainer eventContainer;
     public string Characters
     {
         get
@@ -15,6 +16,8 @@ public class Tile : MonoBehaviour, IPointerClickHandler
 
     private Vector3 startPosition;
     private Vector3 startScale;
+    private Transform initialParent;
+    public bool isDead;
     public void InitTile(string characters)
     {
         if (string.IsNullOrEmpty(characters))
@@ -28,11 +31,12 @@ public class Tile : MonoBehaviour, IPointerClickHandler
     {
         startPosition = transform.position;
         startScale = transform.localScale;
+        initialParent = transform.parent;
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log(textObj.text);
+        eventContainer.tileClicked.RaiseEvent(this);
         /*if (transform.position == startPosition)
         {
             TextField.instance.AttachObject(this.gameObject);
@@ -41,5 +45,16 @@ public class Tile : MonoBehaviour, IPointerClickHandler
         {
             TextField.instance.DetachObject(this.gameObject);
         }*/
+    }
+
+    public void ResetPosition()
+    {
+        transform.SetParent(initialParent);
+        transform.position = startPosition;
+    }
+    public void DestroyTile()
+    {
+        isDead = true;
+        Destroy(gameObject);
     }
 }

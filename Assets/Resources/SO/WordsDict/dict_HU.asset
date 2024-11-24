@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: dict_HU
   m_EditorClassIdentifier: 
   language: HU
-  charSet: "abcdefghijklmnopqrstuvwxyz\xE1\xE9\xED\xF3\xF6\xFA\xFC\u0151\u0171"
+  alphabet: "abcdefghijklmnopqrstuvwxyz\xE1\xE9\xED\xF3\xF6\xFA\xFC\u0151\u0171"
   words:
   - abajgat
   - "ab\xE1l"

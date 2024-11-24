@@ -117,4 +117,60 @@ public static class Utilitity
     {
         return RandomTrue((decimal)chance, percentage);
     }
+    public static T RandomElementFromFairTableExcept<T>(IEnumerable<T> table, IEnumerable<T> exceptElements)
+    {
+        List<T> newTable = new();
+        foreach (var item in table)
+        {
+            if (!exceptElements.Contains(item))
+            {
+                if (item == null)
+                {
+                    continue;
+                }
+                newTable.Add(item);
+            }
+        }
+        return RandomElement(newTable);
+    }
+    public static int[] CreateSequenceOfRange((int, int) tailHead, int increment = 1)
+    {
+        if (tailHead.Item1 == tailHead.Item2)
+        {
+            return new[] { tailHead.Item1, tailHead.Item2 };
+        }
+        int count = Mathf.CeilToInt((tailHead.Item2 - tailHead.Item1) / increment) + 1;
+        int[] array = new int[count];
+        for (int i = 0; i < count; i++)
+        {
+            array[i] = tailHead.Item1 + increment * i;
+        }
+        return array;
+    }
+
+    public static T RandomElementFromWeightedTableNormalized<T>(IEnumerable<T> table, float[] weights)
+    {
+        float rndValue = Random.value;
+        int rndIndex = 0;
+        for (int i = 0; i < weights.Length; i++)
+        {
+            rndValue = rndValue - weights[i];
+            if (rndValue <= 0f)
+            {
+                rndIndex = i;
+                break;
+            }
+        }
+        return table.ElementAt(rndIndex);
+    }
+
+    public static T RandomElementFromWeightedTable<T>(IEnumerable<T> table, float[] weights)
+    {
+        double sum = weights.Sum();
+        for (int i = 0; i < weights.Length; i++)
+        {
+            weights[i] = (float)(weights[i] / sum);
+        }
+        return RandomElementFromWeightedTableNormalized(table, weights);
+    }
 }

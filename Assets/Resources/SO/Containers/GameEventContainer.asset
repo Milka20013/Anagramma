@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ab4fd484d9564444a27bec1706b1ce6, type: 3}
   m_Name: GameEventContainer
   m_EditorClassIdentifier: 
+  successfulWordScan: {fileID: 11400000, guid: 77f53d62cbc26d9469297c68b1ff65b2, type: 2}
+  tileClicked: {fileID: 11400000, guid: e10c6d2c750bfd54a9949c1ed182ce69, type: 2}
   tileSpawned: {fileID: 11400000, guid: 261c29478a11be946a2c3e67abf99711, type: 2}
+  wordScanned: {fileID: 11400000, guid: a1cebd1a93933374a900706af0c1d3f6, type: 2}

@@ -12,7 +12,32 @@ public class DictionaryManager : MonoBehaviour
     [SerializeField] private string dedicatedDictionaryPath;
     [SerializeField] private string resourcesSOFolderPath;
 
-    public WordsDictionary wordsDictionary;
+    [SerializeField] private WordsDictionary _wordsDictionary;
+    public WordsDictionary WordsDictionary
+    {
+        get
+        {
+            return _wordsDictionary;
+        }
+        set
+        {
+            CharSet = new(value.alphabet, value.CharWeights);
+            _wordsDictionary = value;
+        }
+    }
+    private CharSet _charSet;
+    public CharSet CharSet
+    {
+        get
+        {
+            _charSet ??= new(WordsDictionary.alphabet, WordsDictionary.CharWeights);
+            return _charSet;
+        }
+        private set
+        {
+            _charSet = value;
+        }
+    }
 
     private void Awake()
     {
@@ -38,21 +63,24 @@ public class DictionaryManager : MonoBehaviour
             {
                 continue;
             }
-            CreateWordsDictionaryFromFile(fileNames[i], resourcesSOFolderPath);
+            WordsDictionary = CreateWordsDictionaryFromFile(fileNames[i], resourcesSOFolderPath);
         }
     }
-    public static void CreateWordsDictionaryFromFile(string filePath, string locationPath)
+    public static WordsDictionary CreateWordsDictionaryFromFile(string filePath, string locationPath)
     {
         string[] words = File.ReadAllLines(filePath);
         WordsDictionary wordsDict = ScriptableObject.CreateInstance<WordsDictionary>();
-        wordsDict.words = words;
-        wordsDict.charSet = GetOrderedCharsetOfWords(words);
-        wordsDict.charWeights = GetOrderedCharWeightsOfWords(words);
+
+        wordsDict.words = words.OrderBy(x => x).ToArray();
+        wordsDict.alphabet = GetOrderedCharsetOfWords(words);
+        wordsDict.CharWeights = GetOrderedCharWeightsOfWords(words);
+
         string fileName = Path.GetFileNameWithoutExtension(filePath);
         wordsDict.language = fileName.Split('_').Last();
         AssetDatabase.CreateAsset(wordsDict, locationPath + fileName + ".asset");
         AssetDatabase.SaveAssets();
         Debug.Log($"{filePath} was created, and put into {locationPath}");
+        return wordsDict;
     }
 
     public static string GetOrderedCharsetOfWords(string[] words)

@@ -1,177 +1,114 @@
-using UnityEngine;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-public class AnagrammScanner : MonoBehaviour
+public static class AnagrammScanner
 {
-    [SerializeField] private GridManager gridManager;
-    private string[] words;
-    public string searchedWord;
-    private int longestWordLength;
-    private void Start()
+    public static string SearchLongestWord(string characters, WordsDictionary wordsDict, int maxLen, int minLen = 3)
     {
-        words = TextField.instance.wordSet;
-        longestWordLength = gridManager.NumberOfTiles;
-    }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.T))
+        string word = "";
+        characters = SortStringByWeights(characters, wordsDict.CharWeights);
+        for (int i = maxLen; i >= minLen; i--)
         {
-            SearchAllWords();
-        }
-    }
-    public void SearchLongestWord()
-    {
-        for (int i = longestWordLength; i >= 3; i--)
-        {
-            ScanForWord(i);
-            if (searchedWord != "NOT FOUND")
+            word = ScanForWordWithLength(characters, wordsDict, i);
+            if (word != "")
             {
-                break;
+                return word;
             }
         }
+        return word;
     }
-    public void SearchAllWords()
+    public static string ScanForWordWithLength(string characters, WordsDictionary wordsDict, int length)
     {
-        /*string[] characters = gridManager.tileStrings.ToArray();
-        char[] wordChars;
-        CharSet charSet = gridManager.charSet;
-        int abcLength = gridManager.charSet.charSet.Length;
-        int[] charsInInt = new int[abcLength];
-        bool tester = true;
-        int[] numberOfWordsByLength = new int[gridManager.numberOfTiles];
+        Dictionary<char, int> charsDict = new();
         for (int i = 0; i < characters.Length; i++)
         {
-            int index = charSet.GetIndex(characters[i][0]);
-            charsInInt[index]++;
+            if (!charsDict.TryAdd(characters[i], 1))
+            {
+                charsDict[characters[i]]++;
+            }
         }
+        char[] charsArr = charsDict.Keys.ToArray();
+        int[] charValues = charsDict.Values.ToArray();
+        string[] words = wordsDict.words;
         for (int i = 0; i < words.Length; i++)
         {
-            wordChars = words[i].ToCharArray();
-            int[] wordInInt = new int[abcLength];
-            for (int l = 0; l < wordChars.Length; l++)
+            if (words[i].Length != length)
             {
-                int index = charSet.GetIndex(wordChars[l]);
-                wordInInt[index]++;
+                continue;
             }
-            for (int k = 0; k < wordInInt.Length; k++)
+            if (IsAnagram(charsArr, charValues, words[i]))
             {
-                if (wordInInt[k] > charsInInt[k])
-                {
-                    tester = false;
-                    break;
-                }
+                return words[i];
             }
-            if (tester)
-            {
-                numberOfWordsByLength[words[i].Length - 1]++;
-            }
-            tester = true;
         }
-        int sum = 0;
-        for (int i = 0; i < numberOfWordsByLength.Length; i++)
-        {
-            sum += numberOfWordsByLength[i];
-            Debug.Log(numberOfWordsByLength[i]);
-        }
-        Debug.Log(sum);*/
+        return "";
     }
-    public void ScanForWord(int input)
+
+    public static List<string> ScanAllWords(string characters, WordsDictionary wordsDict)
     {
-        /*string[] characters = gridManager.tileStrings.ToArray();
-        char[] wordChars;
-        CharSet charSet = gridManager.charSet;
-        int abcLength = gridManager.charSet.charSet.Length;
-        int[] charsInInt = new int[abcLength];
-        bool tester = true;
+        characters = SortStringByWeights(characters, wordsDict.CharWeights);
+        Dictionary<char, int> charsDict = new();
         for (int i = 0; i < characters.Length; i++)
         {
-            int index = charSet.GetIndex(characters[i][0]);
-            charsInInt[index]++;
-        }
-        for (int i = 0; i < words.Length; i++)
-        {
-            if (words[i].Length == input)
+            if (!charsDict.TryAdd(characters[i], 1))
             {
-                wordChars = words[i].ToCharArray();
-                int[] wordInInt = new int[abcLength];
-                for (int l = 0; l < wordChars.Length; l++)
-                {
-                    int index = charSet.GetIndex(wordChars[l]);
-                    wordInInt[index]++;
-                }
-                for (int k = 0; k < wordInInt.Length; k++)
-                {
-                    if (wordInInt[k] > charsInInt[k])
-                    {
-                        tester = false;
-                        break;
-                    }
-                }
-                if (tester)
-                {
-                    searchedWord = words[i];
-                    return;
-                }
-                tester = true;
+                charsDict[characters[i]]++;
             }
         }
-        searchedWord = "NOT FOUND";*/
+        char[] charsArr = charsDict.Keys.ToArray();
+        int[] charValues = charsDict.Values.ToArray();
+        string[] words = wordsDict.words;
+        List<string> acceptedWords = new(500);
+        for (int i = 0; i < words.Length; i++)
+        {
+            if (IsAnagram(charsArr, charValues, words[i]))
+            {
+                acceptedWords.Add(words[i]);
+            }
+        }
+        return acceptedWords;
     }
-    public void ScanForWord(ParametersForbuttons input)
+
+    public static bool IsAnagram(char[] characters, int[] charValuesArr, string word)
     {
-        /*string[] characters = gridManager.tileStrings.ToArray();
-        char[] wordChars;
-        CharSet charSet = gridManager.charSet;
-        int abcLength = gridManager.charSet.charSet.Length;
-        int[] charsInInt = new int[abcLength];
-        bool tester = true;
-        bool includeChar = input.searchedChar != '.';
-        for (int i = 0; i < characters.Length; i++)
+        if (word.Length > characters.Length)
         {
-            int index = charSet.GetIndex(characters[i][0]);
-            charsInInt[index]++;
+            return false;
         }
-        if (includeChar)
+        int[] charValues = new int[charValuesArr.Length];
+        charValuesArr.CopyTo(charValues, 0);
+        int index;
+        for (int i = 0; i < word.Length; i++)
         {
-            if (charsInInt[charSet.GetIndex(input.searchedChar)] == 0)
+            index = Array.IndexOf(characters, word[i]);
+            if (index < 0)
             {
-                searchedWord = "NOT FOUND";
-                return;
+                return false;
             }
-        }
-        for (int i = 0; i < words.Length; i++)
-        {
-            if (words[i].Length == input.length)
+            if (charValues[index] == 0)
             {
-                wordChars = words[i].ToCharArray();
-                int[] wordInInt = new int[abcLength];
-                for (int l = 0; l < wordChars.Length; l++)
-                {
-                    int index = charSet.GetIndex(wordChars[l]);
-                    wordInInt[index]++;
-                }
-                if (includeChar)
-                {
-                    if (wordInInt[charSet.GetIndex(input.searchedChar)] == 0)
-                    {
-                        continue;
-                    }
-                }
-                for (int k = 0; k < wordInInt.Length; k++)
-                {
-                    if (wordInInt[k] > charsInInt[k])
-                    {
-                        tester = false;
-                        break;
-                    }
-                }
-                if (tester)
-                {
-                    searchedWord = words[i];
-                    return;
-                }
-                tester = true;
+                return false;
             }
+            charValues[index]--;
         }
-        searchedWord = "NOT FOUND";*/
+        return true;
+    }
+    private static string SortStringByWeights(string str, Dictionary<char, float> weights)
+    {
+        char[] arr = new char[str.Length];
+        for (int i = 0; i < str.Length; i++)
+        {
+            arr[i] = str[i];
+        }
+        Array.Sort(arr, (x, y) => weights[x].CompareTo(weights[y]));
+        return new string(arr);
+    }
+    private static void FillCharArrayWithString(string chars, char[] arr)
+    {
+        for (int i = 0; i < chars.Length; i++)
+        {
+            arr[i] = chars[i];
+        }
     }
 }

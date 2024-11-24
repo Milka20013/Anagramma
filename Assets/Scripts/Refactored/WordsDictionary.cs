@@ -1,11 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Words Dictionary")]
 public class WordsDictionary : ScriptableObject
 {
     public string language;
-    public string charSet;
-    public Dictionary<char, float> charWeights;
+    public string alphabet;
+    private Dictionary<char, float> _charWeights;
+    public Dictionary<char, float> CharWeights
+    {
+        get
+        {
+            _charWeights ??= DictionaryManager.GetOrderedCharWeightsOfWords(words);
+            return _charWeights;
+        }
+        set
+        {
+            _charWeights = value;
+        }
+    }
     [HideInInspector] public string[] words;
 }

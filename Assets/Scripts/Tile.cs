@@ -17,7 +17,7 @@ public class Tile : MonoBehaviour, IPointerClickHandler
     private Vector3 startPosition;
     private Vector3 startScale;
     private Transform initialParent;
-    public bool isDead;
+    [HideInInspector] public bool isDead;
     public void InitTile(string characters)
     {
         if (string.IsNullOrEmpty(characters))

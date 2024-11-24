@@ -79,6 +79,13 @@ public class TileField : MonoBehaviour
             word += tile.Characters;
         }
     }
+    private void AddCharsBackToPool()
+    {
+        foreach (var tile in attachedTiles)
+        {
+            dictionaryManager.CharSet.AddCharWeight(tile.Characters[0]);
+        }
+    }
     private void WordNotFound()
     {
         Debug.Log($"{word} not found");
@@ -86,6 +93,7 @@ public class TileField : MonoBehaviour
     private void WordFound()
     {
         Debug.Log($"{word} Found");
+        AddCharsBackToPool();
         DestroyTiles();
         eventContainer.successfulWordScan.RaiseEvent(word);
     }

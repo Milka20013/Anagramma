@@ -1,8 +1,7 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class Tile : MonoBehaviour, IPointerClickHandler
+public class Tile : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI textObj;
     [SerializeField] private GameEventContainer eventContainer;
@@ -34,17 +33,9 @@ public class Tile : MonoBehaviour, IPointerClickHandler
         initialParent = transform.parent;
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    public void OnClick()
     {
         eventContainer.tileClicked.RaiseEvent(this);
-        /*if (transform.position == startPosition)
-        {
-            TextField.instance.AttachObject(this.gameObject);
-        }
-        else
-        {
-            TextField.instance.DetachObject(this.gameObject);
-        }*/
     }
 
     public void ResetPosition()
@@ -55,6 +46,7 @@ public class Tile : MonoBehaviour, IPointerClickHandler
     public void DestroyTile()
     {
         isDead = true;
+        eventContainer.tileDestroyed.RaiseEvent(this);
         Destroy(gameObject);
     }
 }

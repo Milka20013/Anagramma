@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 public class GridManager : MonoBehaviour
 {
     [SerializeField] private int width;
@@ -12,11 +13,13 @@ public class GridManager : MonoBehaviour
             return width * height;
         }
     }
-    [SerializeField] private GameObject prefab;
-    [SerializeField] private GameObject tileContainer;
+    [SerializeField] private GameObject tilePrefab;
+    [SerializeField] private GameObject tileSlotPrefab;
+    [SerializeField] private GameObject tileSlotContainer;
     private DictionaryManager dictionaryManager;
 
     private List<Tile> tiles = new();
+    private List<TileSlot> tileSlots = new();
     [SerializeField] private string forcedString = "gomba";
     private void Start()
     {
@@ -67,6 +70,7 @@ public class GridManager : MonoBehaviour
     }
     public void GenerateGrid()
     {
+        tileSlotContainer.GetComponent<GridLayoutGroup>().constraintCount = height;
         List<(string, string)> tilesToSpawn = new();
         for (int x = 0; x < width; x++)
         {
@@ -77,6 +81,7 @@ public class GridManager : MonoBehaviour
                 if (flattenedIndex < forcedString.Length)
                 {
                     forcedStr = forcedString[flattenedIndex].ToString();
+                    dictionaryManager.CharSet.RemoveCharWeight(forcedString[flattenedIndex]);
                 }
                 else
                 {
@@ -86,19 +91,30 @@ public class GridManager : MonoBehaviour
             }
         }
         tilesToSpawn = tilesToSpawn.Shuffle().ToList();
+
+        SpawnSlots();
+
         foreach (var tile in tilesToSpawn)
         {
             SpawnTile(tile.Item1, tile.Item2);
         }
     }
 
+    private void SpawnSlots()
+    {
+        for (int i = 0; i < NumberOfTiles; i++)
+        {
+            tileSlots.Add(Instantiate(tileSlotPrefab, tileSlotContainer.transform).GetComponent<TileSlot>());
+        }
+    }
+
     public void ShuffleTiles()
     {
-        Transform[] children = new Transform[tileContainer.transform.childCount];
+        Transform[] children = new Transform[tileSlotContainer.transform.childCount];
         int[] indices = new int[children.Length];
         for (int i = 0; i < children.Length; i++)
         {
-            children[i] = tileContainer.transform.GetChild(i);
+            children[i] = tileSlotContainer.transform.GetChild(i);
             indices[i] = i;
         }
         indices = indices.Shuffle().ToArray();
@@ -127,10 +143,27 @@ public class GridManager : MonoBehaviour
             SpawnTile("Refilled", dictionaryManager.CharSet.GetWeightedStr().ToString());
         }
     }
+
+    public Transform GetFirstEmptySlot()
+    {
+        foreach (var slot in tileSlots)
+        {
+            if (slot.IsEmpty())
+            {
+                return slot.transform;
+            }
+        }
+        return null;
+    }
     public void SpawnTile(string tileName, string forcedChar = "")
     {
-        var spawnedTile = Instantiate(prefab, tileContainer.transform);
+        var parent = GetFirstEmptySlot();
+        var spawnedTile = Instantiate(tilePrefab, parent);
         var spawnedTileScr = spawnedTile.GetComponent<Tile>();
+        if (parent.TryGetComponent(out TileSlot slot))
+        {
+            slot.SetTile(spawnedTileScr);
+        }
         spawnedTileScr.InitTile(forcedChar);
         spawnedTile.name = $"Tile-{tileName}";
         tiles.Add(spawnedTileScr);

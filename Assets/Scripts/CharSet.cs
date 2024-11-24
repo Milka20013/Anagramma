@@ -13,18 +13,22 @@ public class CharSet
     }
     public string GetWeightedStr()
     {
-        //to-do : balanced weight reduction
         var weights = charWeights.Values.ToArray();
         char c = Utilitity.RandomElementFromWeightedTable(alphabet, weights);
-        AdjustWeights(c);
+        RemoveCharWeight(c);
         return c.ToString();
     }
     public void ResetWeights()
     {
         charWeights = new(initialCharWeights);
     }
-    public void AdjustWeights(char c)
+    public void RemoveCharWeight(char c)
     {
+        charWeights[c] /= 2;
+    }
 
+    public void AddCharWeight(char c)
+    {
+        charWeights[c] *= 2;
     }
 }
